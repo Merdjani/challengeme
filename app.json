@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "ChallengeMe",
+    "slug": "challengeme",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#0a1929"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.anonymous.challengeme"
+    }
+  }
+}
