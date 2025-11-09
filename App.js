@@ -6,46 +6,26 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { colors } from './theme/colors';
 import { authService } from './services/authService';
 
-// Auth Screens
+// Screens
+import ReadyScreen from './screens/ReadyScreen';
+import AuthChoiceScreen from './screens/AuthChoiceScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-
-// Main Screens
-import DashboardScreen from './screens/DashboardScreen';
+import ProfileSetupScreen from './screens/ProfileSetupScreen';
+import HomeScreen from './screens/HomeScreen';
 import ChallengesListScreen from './screens/ChallengesListScreen';
-import NotificationsScreen from './screens/NotificationsScreen';
-import ProfileScreen from './screens/ProfileScreen';
-
-// Detail Screens
-import ChallengeDetailScreen from './screens/ChallengeDetailScreen';
-import TaskDetailsScreen from './screens/TaskDetailsScreen';
-import CreateChallengeScreen from './screens/CreateChallengeScreen';
-import SettingsScreen from './screens/SettingsScreen';
+import ChallengeRoomScreen from './screens/ChallengeRoomScreen';
+import ResultsScreen from './screens/ResultsScreen';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-const AuthStack = createStackNavigator();
 
-// Auth Stack Navigator
-function AuthStackNavigator() {
-  return (
-    <AuthStack.Navigator
-      screenOptions={{
-        headerShown: false,
-        cardStyle: { backgroundColor: colors.black },
-      }}
-    >
-      <AuthStack.Screen name="Login" component={LoginScreen} />
-      <AuthStack.Screen name="Signup" component={SignupScreen} />
-    </AuthStack.Navigator>
-  );
-}
-
-// Main Tabs Navigator
-function MainTabsNavigator() {
+// Home Tabs Navigator - Simplified to one-function app
+function HomeTabsNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -57,10 +37,6 @@ function MainTabsNavigator() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'Challenges') {
             iconName = focused ? 'trophy' : 'trophy-outline';
-          } else if (route.name === 'Notifications') {
-            iconName = focused ? 'notifications' : 'notifications-outline';
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -74,15 +50,13 @@ function MainTabsNavigator() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={DashboardScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Challenges" component={ChallengesListScreen} />
-      <Tab.Screen name="Notifications" component={NotificationsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
   );
 }
 
-// Main Stack Navigator (includes tabs and detail screens)
+// Main Stack Navigator
 function MainStackNavigator() {
   return (
     <Stack.Navigator
@@ -91,17 +65,16 @@ function MainStackNavigator() {
         cardStyle: { backgroundColor: colors.black },
       }}
     >
-      <Stack.Screen name="MainTabs" component={MainTabsNavigator} />
-      <Stack.Screen name="ChallengeDetail" component={ChallengeDetailScreen} />
-      <Stack.Screen name="TaskDetails" component={TaskDetailsScreen} />
-      <Stack.Screen name="CreateChallenge" component={CreateChallengeScreen} />
-      <Stack.Screen name="Settings" component={SettingsScreen} />
+      <Stack.Screen name="HomeTabs" component={HomeTabsNavigator} />
+      <Stack.Screen name="ChallengeRoom" component={ChallengeRoomScreen} />
+      <Stack.Screen name="Results" component={ResultsScreen} />
     </Stack.Navigator>
   );
 }
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isGuest, setIsGuest] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -111,10 +84,13 @@ export default function App() {
   const checkAuthStatus = async () => {
     try {
       const authenticated = await authService.isAuthenticated();
+      const guestMode = await authService.isGuestMode();
       setIsAuthenticated(authenticated);
+      setIsGuest(guestMode);
     } catch (error) {
       console.error('Error checking auth status:', error);
       setIsAuthenticated(false);
+      setIsGuest(false);
     } finally {
       setLoading(false);
     }
@@ -129,16 +105,29 @@ export default function App() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
-        <StatusBar style="light" />
-        {isAuthenticated ? (
-          <MainStackNavigator />
-        ) : (
-          <AuthStackNavigator />
-        )}
-      </NavigationContainer>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <NavigationContainer>
+          <StatusBar style="light" />
+          {isAuthenticated || isGuest ? (
+            <MainStackNavigator />
+          ) : (
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                cardStyle: { backgroundColor: colors.black },
+              }}
+            >
+              <Stack.Screen name="Ready" component={ReadyScreen} />
+              <Stack.Screen name="AuthChoice" component={AuthChoiceScreen} />
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Signup" component={SignupScreen} />
+              <Stack.Screen name="ProfileSetup" component={ProfileSetupScreen} />
+            </Stack.Navigator>
+          )}
+        </NavigationContainer>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
 

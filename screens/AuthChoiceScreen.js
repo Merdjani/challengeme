@@ -9,7 +9,7 @@ import {
 import { colors } from '../theme/colors';
 import { authService } from '../services/authService';
 
-export default function WelcomeScreen({ navigation }) {
+export default function AuthChoiceScreen({ navigation }) {
   const handleLogin = () => {
     navigation.navigate('Login');
   };
@@ -31,13 +31,9 @@ export default function WelcomeScreen({ navigation }) {
     <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.content}>
-          <View style={styles.logoSection}>
-            <Text style={styles.appName}>ChallengeMe</Text>
-          </View>
-
-          <View style={styles.messageSection}>
-            <Text style={styles.welcomeMessage}>Welcome to ChallengeMe!</Text>
-            <Text style={styles.subtitle}>Test your knowledge and challenge yourself daily</Text>
+          <View style={styles.header}>
+            <Text style={styles.title}>Welcome to ChallengeMe!</Text>
+            <Text style={styles.subtitle}>Choose how you'd like to proceed</Text>
           </View>
 
           <View style={styles.buttonContainer}>
@@ -85,23 +81,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 40,
   },
-  logoSection: {
-    marginBottom: 60,
-  },
-  appName: {
-    fontSize: 48,
-    color: colors.green,
-    fontWeight: '700',
-    fontFamily: 'System',
-  },
-  messageSection: {
+  header: {
     alignItems: 'center',
     marginBottom: 60,
   },
-  welcomeMessage: {
-    fontSize: 24,
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
     color: colors.white,
-    fontWeight: '600',
     textAlign: 'center',
     marginBottom: 12,
     fontFamily: 'System',
@@ -160,4 +147,3 @@ const styles = StyleSheet.create({
     fontFamily: 'System',
   },
 });
-

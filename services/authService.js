@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AUTH_TOKEN_KEY = '@challengeme:auth_token';
 const USER_DATA_KEY = '@challengeme:user_data';
+const GUEST_MODE_KEY = '@challengeme:guest_mode';
 
 // Mock authentication service (replace with real API calls)
 export const authService = {
@@ -48,6 +49,16 @@ export const authService = {
     });
   },
 
+  // Update user profile
+  async updateUserProfile(userData) {
+    // TODO: Replace with actual API call
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(userData);
+      }, 500);
+    });
+  },
+
   // Forgot Password
   async forgotPassword(email) {
     // TODO: Replace with actual API call
@@ -85,11 +96,34 @@ export const authService = {
     }
   },
 
+  // Set guest mode
+  async setGuestMode(isGuest) {
+    try {
+      await AsyncStorage.setItem(GUEST_MODE_KEY, JSON.stringify(isGuest));
+      return true;
+    } catch (error) {
+      console.error('Error setting guest mode:', error);
+      return false;
+    }
+  },
+
+  // Check if in guest mode
+  async isGuestMode() {
+    try {
+      const guestMode = await AsyncStorage.getItem(GUEST_MODE_KEY);
+      return guestMode ? JSON.parse(guestMode) : false;
+    } catch (error) {
+      console.error('Error checking guest mode:', error);
+      return false;
+    }
+  },
+
   // Logout
   async logout() {
     try {
       await AsyncStorage.removeItem(AUTH_TOKEN_KEY);
       await AsyncStorage.removeItem(USER_DATA_KEY);
+      await AsyncStorage.removeItem(GUEST_MODE_KEY);
       return true;
     } catch (error) {
       console.error('Error logging out:', error);
@@ -103,4 +137,3 @@ export const authService = {
     return authData !== null;
   },
 };
-

@@ -1,0 +1,1 @@
+sdk.dir=C:\\Users\\T14s\\AppData\\Local\\Android\\Sdk

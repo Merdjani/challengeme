@@ -31,7 +31,7 @@ export default function LoginScreen({ navigation }) {
     try {
       const { user, token } = await authService.login(email, password);
       await authService.storeAuthData(token, user);
-      navigation.replace('MainTabs');
+      navigation.replace('HomeTabs');
     } catch (error) {
       Alert.alert('Login Failed', error.message || 'Invalid credentials');
     } finally {

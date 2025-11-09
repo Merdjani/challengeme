@@ -39,7 +39,7 @@ export default function SettingsScreen({ navigation }) {
           style: 'destructive',
           onPress: async () => {
             await authService.logout();
-            navigation.replace('AuthStack');
+            navigation.replace('Welcome');
           },
         },
       ]

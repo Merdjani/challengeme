@@ -150,7 +150,7 @@ export default function ChallengesListScreen({ navigation }) {
                 <ChallengeCard
                   key={challenge.id}
                   challenge={challenge}
-                  onPress={() => navigation.navigate('ChallengeDetail', { challengeId: challenge.id })}
+                  onPress={() => navigation.navigate('ChallengeRoom', { challengeId: challenge.id })}
                   onJoin={() => handleJoinChallenge(challenge.id)}
                 />
               ))

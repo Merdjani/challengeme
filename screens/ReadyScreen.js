@@ -5,26 +5,17 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  BackHandler,
 } from 'react-native';
 import { colors } from '../theme/colors';
-import { authService } from '../services/authService';
 
-export default function WelcomeScreen({ navigation }) {
-  const handleLogin = () => {
-    navigation.navigate('Login');
+export default function ReadyScreen({ navigation }) {
+  const handleYes = () => {
+    navigation.navigate('AuthChoice');
   };
 
-  const handleSignup = () => {
-    navigation.navigate('Signup');
-  };
-
-  const handleEnterWithoutAccount = async () => {
-    try {
-      await authService.setGuestMode(true);
-      navigation.replace('HomeTabs');
-    } catch (error) {
-      console.error('Error setting guest mode:', error);
-    }
+  const handleNo = () => {
+    BackHandler.exitApp();
   };
 
   return (
@@ -36,33 +27,25 @@ export default function WelcomeScreen({ navigation }) {
           </View>
 
           <View style={styles.messageSection}>
-            <Text style={styles.welcomeMessage}>Welcome to ChallengeMe!</Text>
-            <Text style={styles.subtitle}>Test your knowledge and challenge yourself daily</Text>
+            <Text style={styles.question}>Are you ready to challenge yourself?</Text>
+            <Text style={styles.subtitle}>Test your knowledge and push your limits!</Text>
           </View>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={[styles.button, styles.primaryButton]}
-              onPress={handleLogin}
+              style={[styles.button, styles.yesButton]}
+              onPress={handleYes}
               activeOpacity={0.8}
             >
-              <Text style={styles.primaryButtonText}>Login</Text>
+              <Text style={styles.yesButtonText}>Yes, I'm Ready!</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
-              style={[styles.button, styles.secondaryButton]}
-              onPress={handleSignup}
+              style={[styles.button, styles.noButton]}
+              onPress={handleNo}
               activeOpacity={0.8}
             >
-              <Text style={styles.secondaryButtonText}>Sign Up</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.button, styles.guestButton]}
-              onPress={handleEnterWithoutAccount}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.guestButtonText}>Enter Without Account</Text>
+              <Text style={styles.noButtonText}>Not Now</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -98,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 60,
   },
-  welcomeMessage: {
+  question: {
     fontSize: 24,
     color: colors.white,
     fontWeight: '600',
@@ -123,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  primaryButton: {
+  yesButton: {
     backgroundColor: colors.green,
     shadowColor: colors.glowGreen,
     shadowOffset: { width: 0, height: 4 },
@@ -131,33 +114,21 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 8,
   },
-  primaryButtonText: {
+  yesButtonText: {
     color: colors.white,
     fontSize: 18,
     fontWeight: '600',
     fontFamily: 'System',
   },
-  secondaryButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: colors.green,
-  },
-  secondaryButtonText: {
-    color: colors.green,
-    fontSize: 18,
-    fontWeight: '600',
-    fontFamily: 'System',
-  },
-  guestButton: {
+  noButton: {
     backgroundColor: colors.cardDark,
     borderWidth: 1,
     borderColor: colors.blackLight,
   },
-  guestButtonText: {
+  noButtonText: {
     color: colors.white,
     fontSize: 16,
     fontWeight: '500',
     fontFamily: 'System',
   },
 });
-

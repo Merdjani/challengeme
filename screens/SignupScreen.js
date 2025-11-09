@@ -45,7 +45,7 @@ export default function SignupScreen({ navigation }) {
     try {
       const { user, token } = await authService.signup({ name, email, password });
       await authService.storeAuthData(token, user);
-      navigation.replace('MainTabs');
+      navigation.replace('ProfileSetup', { user, token });
     } catch (error) {
       Alert.alert('Signup Failed', error.message || 'Failed to create account');
     } finally {
